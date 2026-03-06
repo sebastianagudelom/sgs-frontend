@@ -1,0 +1,26 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <a class="nav-brand" routerLink="/productos">🛒 SGS Supermercado</a>
+
+    <button class="nav-toggle" (click)="toggleMenu()">☰</button>
+
+    <div class="nav-menu" [class.open]="menuOpen">
+      @if (authService.isLoggedIn()) {
+        <a routerLink="/productos" routerLinkActive="active" (click)="menuOpen = false">Productos</a>
+
+        @if (authService.isAdmin()) {
+          <a routerLink="/categorias" routerLinkActive="active" (click)="menuOpen = false">Categorías</a>
+        }
+
+        <div class="nav-user">
+          <span class="user-name">{{ authService.getCurrentUser()?.nombre }}</span>
+          <span class="user-badge">{{ authService.getCurrentUser()?.rol }}</span>
+          <button class="btn btn-sm btn-outline" (click)="logout()">Cerrar sesión</button>
+        </div>
+      } @else {
+        <a routerLink="/login" routerLinkActive="active" (click)="menuOpen = false">Iniciar Sesión</a>
+        <a routerLink="/registro" routerLinkActive="active" class="btn btn-sm btn-primary" (click)="menuOpen = false">Registrarse</a>
+      }
+    </div>
+  </div>
+</nav>

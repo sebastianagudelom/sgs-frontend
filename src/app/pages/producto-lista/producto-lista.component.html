@@ -1,0 +1,66 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>🛒 Productos</h2>
+    <div class="header-actions">
+      <input
+        type="text"
+        placeholder="Buscar productos..."
+        [(ngModel)]="busqueda"
+        (input)="buscar()"
+        class="search-input"
+      />
+      @if (isAdmin) {
+        <button class="btn btn-primary" (click)="agregarProducto()">+ Nuevo Producto</button>
+      }
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading-container">
+      <div class="spinner-lg"></div>
+      <p>Cargando productos...</p>
+    </div>
+  } @else if (productosFiltrados.length === 0) {
+    <div class="empty-state">
+      <p>📦 No se encontraron productos</p>
+    </div>
+  } @else {
+    <div class="product-grid">
+      @for (producto of productosFiltrados; track producto.id) {
+        <div class="product-card" [class.inactive]="!producto.activo">
+          <div class="product-image">
+            @if (producto.imagenUrl) {
+              <img [src]="producto.imagenUrl" [alt]="producto.nombre" />
+            } @else {
+              <div class="no-image">📷</div>
+            }
+            @if (!producto.activo) {
+              <span class="badge badge-inactive">Inactivo</span>
+            }
+            @if (producto.stock <= 5 && producto.stock > 0) {
+              <span class="badge badge-warning">Últimas unidades</span>
+            }
+            @if (producto.stock === 0) {
+              <span class="badge badge-danger">Agotado</span>
+            }
+          </div>
+          <div class="product-info">
+            <span class="product-category">{{ producto.categoriaNombre }}</span>
+            <h3>{{ producto.nombre }}</h3>
+            <p class="product-description">{{ producto.descripcion }}</p>
+            <div class="product-footer">
+              <span class="product-price">{{ formatPrecio(producto.precio) }}</span>
+              <span class="product-stock">Stock: {{ producto.stock }}</span>
+            </div>
+            @if (isAdmin) {
+              <div class="product-actions">
+                <button class="btn btn-sm btn-outline" (click)="editarProducto(producto.id)">✏️ Editar</button>
+                <button class="btn btn-sm btn-danger" (click)="eliminarProducto(producto.id)">🗑️ Eliminar</button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

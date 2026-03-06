@@ -1,0 +1,100 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>📁 Categorías</h2>
+    <button class="btn btn-primary" (click)="abrirFormNuevo()">+ Nueva Categoría</button>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-error">{{ errorMessage }}</div>
+  }
+
+  <!-- Modal / Form -->
+  @if (mostrarForm) {
+    <div class="modal-overlay" (click)="cancelar()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <h3>{{ editandoId ? 'Editar Categoría' : 'Nueva Categoría' }}</h3>
+
+        <form [formGroup]="categoriaForm" (ngSubmit)="guardar()">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input
+              type="text"
+              id="nombre"
+              formControlName="nombre"
+              placeholder="Ej: Lácteos"
+              [class.input-error]="f['nombre'].touched && f['nombre'].invalid"
+            />
+            @if (f['nombre'].touched && f['nombre'].errors) {
+              <small class="error-text">
+                @if (f['nombre'].errors['required']) { El nombre es obligatorio }
+                @else if (f['nombre'].errors['minlength']) { Mínimo 2 caracteres }
+              </small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="descripcion">Descripción (opcional)</label>
+            <textarea
+              id="descripcion"
+              formControlName="descripcion"
+              placeholder="Descripción de la categoría"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-outline" (click)="cancelar()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="saving">
+              @if (saving) {
+                <span class="spinner"></span> Guardando...
+              } @else {
+                {{ editandoId ? 'Actualizar' : 'Crear' }}
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  @if (loading) {
+    <div class="loading-container">
+      <div class="spinner-lg"></div>
+      <p>Cargando categorías...</p>
+    </div>
+  } @else if (categorias.length === 0) {
+    <div class="empty-state">
+      <p>📁 No hay categorías registradas</p>
+    </div>
+  } @else {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Productos</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (cat of categorias; track cat.id) {
+            <tr>
+              <td>{{ cat.id }}</td>
+              <td><strong>{{ cat.nombre }}</strong></td>
+              <td>{{ cat.descripcion || '—' }}</td>
+              <td>{{ cat.cantidadProductos }}</td>
+              <td>
+                <div class="table-actions">
+                  <button class="btn btn-sm btn-outline" (click)="editarCategoria(cat)">✏️</button>
+                  <button class="btn btn-sm btn-danger" (click)="eliminarCategoria(cat.id)">🗑️</button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
