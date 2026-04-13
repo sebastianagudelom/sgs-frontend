@@ -31,8 +31,27 @@ export const routes: Routes = [
     canActivate: [adminGuard]
   },
   {
+    path: 'productos/:id',
+    loadComponent: () => import('./pages/producto-detalle/producto-detalle.component').then(m => m.ProductoDetalleComponent)
+  },
+  {
     path: 'categorias',
     loadComponent: () => import('./pages/categorias/categorias.component').then(m => m.CategoriasComponent),
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'carrito',
+    loadComponent: () => import('./pages/carrito/carrito.component').then(m => m.CarritoComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'mis-pedidos',
+    loadComponent: () => import('./pages/mis-pedidos/mis-pedidos.component').then(m => m.MisPedidosComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'admin/pedidos',
+    loadComponent: () => import('./pages/admin-pedidos/admin-pedidos.component').then(m => m.AdminPedidosComponent),
     canActivate: [adminGuard]
   },
   {

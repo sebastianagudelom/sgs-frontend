@@ -20,6 +20,9 @@ export class ProductoFormComponent implements OnInit {
   productoId: number | null = null;
   errorMessage = '';
   loading = false;
+  archivoSeleccionado: File | null = null;
+  imagenPreview: string | null = null;
+  subiendoImagen = false;
 
   constructor(
     private fb: FormBuilder,
@@ -66,11 +69,34 @@ export class ProductoFormComponent implements OnInit {
           imagenUrl: producto.imagenUrl,
           categoriaId: producto.categoriaId
         });
+        if (producto.imagenUrl) {
+          this.imagenPreview = producto.imagenUrl;
+        }
       },
       error: () => {
         this.router.navigate(['/productos']);
       }
     });
+  }
+
+  onArchivoSeleccionado(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.archivoSeleccionado = input.files[0];
+
+      // Preview local
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagenPreview = reader.result as string;
+      };
+      reader.readAsDataURL(this.archivoSeleccionado);
+    }
+  }
+
+  eliminarImagen(): void {
+    this.archivoSeleccionado = null;
+    this.imagenPreview = null;
+    this.productoForm.patchValue({ imagenUrl: '' });
   }
 
   onSubmit(): void {
@@ -79,9 +105,36 @@ export class ProductoFormComponent implements OnInit {
       return;
     }
 
+    // Validar imagen obligatoria (nuevo producto debe tener archivo, editando debe tener preview o archivo)
+    if (!this.archivoSeleccionado && !this.imagenPreview) {
+      this.errorMessage = 'La imagen del producto es obligatoria';
+      return;
+    }
+
     this.loading = true;
     this.errorMessage = '';
 
+    if (this.archivoSeleccionado) {
+      // Primero subir imagen, luego guardar producto
+      this.subiendoImagen = true;
+      this.productoService.subirImagen(this.archivoSeleccionado).subscribe({
+        next: (res) => {
+          this.subiendoImagen = false;
+          this.productoForm.patchValue({ imagenUrl: res.url });
+          this.guardarProducto();
+        },
+        error: (err) => {
+          this.loading = false;
+          this.subiendoImagen = false;
+          this.errorMessage = err.error?.mensaje || 'Error al subir la imagen';
+        }
+      });
+    } else {
+      this.guardarProducto();
+    }
+  }
+
+  private guardarProducto(): void {
     const formValue = this.productoForm.value;
 
     const obs = this.editando && this.productoId

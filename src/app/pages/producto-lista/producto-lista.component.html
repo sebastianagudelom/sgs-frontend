@@ -58,9 +58,24 @@
                 <button class="btn btn-sm btn-danger" (click)="eliminarProducto(producto.id)">🗑️ Eliminar</button>
               </div>
             }
+            @if (isLoggedIn && !isAdmin && producto.activo && producto.stock > 0) {
+              <div class="product-actions cart-actions">
+                <div class="quantity-selector">
+                  <button class="btn-qty" (click)="decrementarCantidad(producto)" [disabled]="getCantidad(producto) <= 1">−</button>
+                  <span class="qty-value">{{ getCantidad(producto) }}</span>
+                  <button class="btn-qty" (click)="incrementarCantidad(producto)" [disabled]="getCantidad(producto) >= producto.stock">+</button>
+                </div>
+                <button class="btn btn-sm btn-primary btn-cart" (click)="agregarAlCarrito(producto)">🛒 Agregar</button>
+              </div>
+            }
+            <button class="btn-detail" (click)="verDetalle(producto.id)">Ver detalle →</button>
           </div>
         </div>
       }
     </div>
+  }
+
+  @if (mensajeCarrito) {
+    <div class="toast-carrito">{{ mensajeCarrito }}</div>
   }
 </div>

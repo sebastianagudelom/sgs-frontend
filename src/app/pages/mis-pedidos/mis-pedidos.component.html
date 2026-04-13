@@ -1,0 +1,64 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>📦 Mis Pedidos</h2>
+    <a routerLink="/productos" class="btn btn-outline">Seguir comprando</a>
+  </div>
+
+  @if (loading) {
+    <div class="loading-container">
+      <div class="spinner-lg"></div>
+      <p>Cargando pedidos...</p>
+    </div>
+  } @else if (pedidos.length === 0) {
+    <div class="empty-state">
+      <p>📦 Aún no has realizado ningún pedido</p>
+      <a routerLink="/productos" class="btn btn-primary">Explorar productos</a>
+    </div>
+  } @else {
+    <div class="pedidos-lista">
+      @for (pedido of pedidos; track pedido.id) {
+        <div class="pedido-card">
+          <div class="pedido-header" (click)="toggleDetalles(pedido.id)">
+            <div class="pedido-info">
+              <span class="pedido-id">Pedido #{{ pedido.id }}</span>
+              <span class="pedido-fecha">{{ formatFecha(pedido.fechaCreacion) }}</span>
+            </div>
+            <div class="pedido-meta">
+              <span class="pedido-estado" [ngClass]="getEstadoClass(pedido.estado)">
+                {{ getEstadoLabel(pedido.estado) }}
+              </span>
+              <span class="pedido-total">{{ formatPrecio(pedido.total) }}</span>
+              <span class="expand-icon">{{ pedidoExpandido === pedido.id ? '▲' : '▼' }}</span>
+            </div>
+          </div>
+
+          @if (pedidoExpandido === pedido.id) {
+            <div class="pedido-detalles">
+              @if (pedido.direccionEnvio) {
+                <p class="direccion"><strong>Dirección:</strong> {{ pedido.direccionEnvio }}</p>
+              }
+              <div class="detalles-lista">
+                @for (det of pedido.detalles; track det.id) {
+                  <div class="detalle-item">
+                    <div class="det-imagen">
+                      @if (det.productoImagenUrl) {
+                        <img [src]="det.productoImagenUrl" [alt]="det.productoNombre" />
+                      } @else {
+                        <div class="no-image">📷</div>
+                      }
+                    </div>
+                    <div class="det-info">
+                      <span class="det-nombre">{{ det.productoNombre }}</span>
+                      <span class="det-qty">{{ det.cantidad }} x {{ formatPrecio(det.precioUnitario) }}</span>
+                    </div>
+                    <span class="det-subtotal">{{ formatPrecio(det.subtotal) }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

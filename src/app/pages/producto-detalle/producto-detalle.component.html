@@ -1,0 +1,64 @@
+<div class="detalle-page">
+  @if (loading) {
+    <div class="loading-container">
+      <div class="spinner-lg"></div>
+      <p>Cargando producto...</p>
+    </div>
+  } @else if (producto) {
+    <button class="btn-back" (click)="volver()">← Volver a productos</button>
+
+    <div class="detalle-card">
+      <div class="detalle-image">
+        @if (producto.imagenUrl) {
+          <img [src]="producto.imagenUrl" [alt]="producto.nombre" />
+        } @else {
+          <div class="no-image">📷</div>
+        }
+      </div>
+
+      <div class="detalle-info">
+        <span class="detalle-category">{{ producto.categoriaNombre }}</span>
+        <h1>{{ producto.nombre }}</h1>
+        <p class="detalle-description">{{ producto.descripcion }}</p>
+
+        <div class="detalle-price">{{ formatPrecio(producto.precio) }}</div>
+
+        <div class="detalle-meta">
+          <span class="meta-item">
+            📦 Stock disponible: <strong>{{ producto.stock }}</strong>
+          </span>
+          @if (!producto.activo) {
+            <span class="meta-item status-inactive">⚠️ Producto inactivo</span>
+          }
+          @if (producto.stock === 0) {
+            <span class="meta-item status-agotado">Agotado</span>
+          }
+          @if (producto.stock > 0 && producto.stock <= 5) {
+            <span class="meta-item status-warning">¡Últimas unidades!</span>
+          }
+        </div>
+
+        @if (isLoggedIn && !isAdmin && producto.activo && producto.stock > 0) {
+          <div class="cart-section">
+            <div class="quantity-selector">
+              <button class="btn-qty" (click)="decrementar()" [disabled]="cantidad <= 1">−</button>
+              <span class="qty-value">{{ cantidad }}</span>
+              <button class="btn-qty" (click)="incrementar()" [disabled]="cantidad >= producto.stock">+</button>
+            </div>
+            <button class="btn btn-primary btn-add-cart" (click)="agregarAlCarrito()">
+              🛒 Agregar al carrito
+            </button>
+          </div>
+        }
+
+        @if (!isLoggedIn) {
+          <p class="login-hint">Inicia sesión para agregar al carrito</p>
+        }
+      </div>
+    </div>
+  }
+
+  @if (mensajeCarrito) {
+    <div class="toast-carrito">{{ mensajeCarrito }}</div>
+  }
+</div>

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProductoService } from '../../services/producto.service';
 import { AuthService } from '../../services/auth.service';
+import { CarritoService } from '../../services/carrito.service';
 import { ProductoResponse } from '../../models/producto.model';
 
 @Component({
@@ -19,15 +20,20 @@ export class ProductoListaComponent implements OnInit {
   busqueda = '';
   loading = true;
   isAdmin = false;
+  isLoggedIn = false;
+  mensajeCarrito = '';
+  cantidades: { [productoId: number]: number } = {};
 
   constructor(
     private productoService: ProductoService,
-    private authService: AuthService,
+private authService: AuthService,
+    private carritoService: CarritoService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.isAdmin = this.authService.isAdmin();
+    this.isLoggedIn = this.authService.isLoggedIn();
     this.cargarProductos();
   }
 
@@ -74,6 +80,47 @@ export class ProductoListaComponent implements OnInit {
         next: () => this.cargarProductos()
       });
     }
+  }
+
+  agregarAlCarrito(producto: ProductoResponse): void {
+    const cantidad = this.getCantidad(producto);
+    try {
+      this.carritoService.agregarItem({
+        id: producto.id,
+        nombre: producto.nombre,
+        precio: producto.precio,
+        imagenUrl: producto.imagenUrl,
+        stock: producto.stock
+      }, cantidad);
+      this.mensajeCarrito = `"${producto.nombre}" x${cantidad} agregado al carrito`;
+      this.cantidades[producto.id] = 1;
+      setTimeout(() => this.mensajeCarrito = '', 2500);
+    } catch (e: any) {
+      this.mensajeCarrito = e.message;
+      setTimeout(() => this.mensajeCarrito = '', 3000);
+    }
+  }
+
+  getCantidad(producto: ProductoResponse): number {
+    return this.cantidades[producto.id] || 1;
+  }
+
+  incrementarCantidad(producto: ProductoResponse): void {
+    const actual = this.getCantidad(producto);
+    if (actual < producto.stock) {
+      this.cantidades[producto.id] = actual + 1;
+    }
+  }
+
+  decrementarCantidad(producto: ProductoResponse): void {
+    const actual = this.getCantidad(producto);
+    if (actual > 1) {
+      this.cantidades[producto.id] = actual - 1;
+    }
+  }
+
+  verDetalle(id: number): void {
+    this.router.navigate(['/productos', id]);
   }
 
   formatPrecio(precio: number): string {

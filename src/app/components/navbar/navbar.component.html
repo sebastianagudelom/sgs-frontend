@@ -10,6 +10,15 @@
 
         @if (authService.isAdmin()) {
           <a routerLink="/categorias" routerLinkActive="active" (click)="menuOpen = false">Categorías</a>
+          <a routerLink="/admin/pedidos" routerLinkActive="active" (click)="menuOpen = false">Pedidos</a>
+        } @else {
+          <a routerLink="/carrito" routerLinkActive="active" (click)="menuOpen = false" class="cart-link">
+            🛒
+            @if (carritoService.totalItems > 0) {
+              <span class="cart-badge">{{ carritoService.totalItems }}</span>
+            }
+          </a>
+          <a routerLink="/mis-pedidos" routerLinkActive="active" (click)="menuOpen = false">Mis Pedidos</a>
         }
 
         <div class="nav-user">

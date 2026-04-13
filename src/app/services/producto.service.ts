@@ -8,6 +8,7 @@ import { ProductoRequest, ProductoResponse } from '../models/producto.model';
 export class ProductoService {
 
   private apiUrl = `${environment.apiUrl}/productos`;
+  private imagenUrl = `${environment.apiUrl}/imagenes`;
 
   constructor(private http: HttpClient) {}
 
@@ -42,5 +43,11 @@ export class ProductoService {
 
   eliminar(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  subirImagen(archivo: File): Observable<{ url: string }> {
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+    return this.http.post<{ url: string }>(`${this.imagenUrl}/upload`, formData);
   }
 }

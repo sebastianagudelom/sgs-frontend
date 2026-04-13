@@ -88,13 +88,34 @@
       </div>
 
       <div class="form-group">
-        <label for="imagenUrl">URL de la imagen (opcional)</label>
-        <input
-          type="url"
-          id="imagenUrl"
-          formControlName="imagenUrl"
-          placeholder="https://ejemplo.com/imagen.jpg"
-        />
+        <label>Imagen del producto <span class="required">*</span></label>
+        <div class="imagen-upload-area">
+          @if (imagenPreview) {
+            <div class="imagen-preview-container">
+              <img [src]="imagenPreview" alt="Preview" class="imagen-preview" />
+              <button type="button" class="btn-remove-imagen" (click)="eliminarImagen()">✕</button>
+            </div>
+          } @else {
+            <label for="archivoImagen" class="upload-label">
+              <span class="upload-icon">📷</span>
+              <span>Haz clic para seleccionar una imagen</span>
+              <small>JPEG, PNG, WebP o GIF (máx. 5 MB)</small>
+            </label>
+          }
+          <input
+            type="file"
+            id="archivoImagen"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            (change)="onArchivoSeleccionado($event)"
+            [style.display]="imagenPreview ? 'none' : 'none'"
+          />
+        </div>
+        @if (subiendoImagen) {
+          <small class="uploading-text"><span class="spinner"></span> Subiendo imagen...</small>
+        }
+        @if (!imagenPreview && !archivoSeleccionado && errorMessage === 'La imagen del producto es obligatoria') {
+          <small class="error-text">Debes seleccionar una imagen</small>
+        }
       </div>
 
       <div class="form-actions">

@@ -149,6 +149,105 @@
   margin-top: 0.75rem;
 }
 
+.btn-cart {
+  flex: 1;
+}
+
+.cart-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.btn-qty {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f1f5f9;
+  color: #1e293b;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.btn-qty:hover:not(:disabled) {
+  background: #e2e8f0;
+}
+
+.btn-qty:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.qty-value {
+  width: 32px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+.btn-detail {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.4rem;
+  background: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #3b82f6;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.btn-detail:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.toast-carrito {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
 .loading-container {
   text-align: center;
   padding: 4rem;

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { CarritoService } from '../../services/carrito.service';
 
 @Component({
   selector: 'app-navbar',
@@ -15,6 +16,7 @@ export class NavbarComponent {
 
   constructor(
     public authService: AuthService,
+    public carritoService: CarritoService,
     private router: Router
   ) {}
 
@@ -24,6 +26,7 @@ export class NavbarComponent {
 
   logout(): void {
     this.authService.logout();
+    this.carritoService.vaciarCarrito();
     this.router.navigate(['/login']);
     this.menuOpen = false;
   }
