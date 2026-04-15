@@ -113,4 +113,24 @@ export class CategoriasComponent implements OnInit {
   get f() {
     return this.categoriaForm.controls;
   }
+
+  private categoryColors = ['#00a650', '#ff9800', '#e53935', '#1565c0', '#7b1fa2', '#00897b', '#f4511e', '#6d4c41', '#546e7a', '#d81b60'];
+
+  getCategoryColor(index: number): string {
+    return this.categoryColors[index % this.categoryColors.length];
+  }
+
+  getCategoryEmoji(nombre: string): string {
+    const map: { [key: string]: string } = {
+      'lácteos': '🥛', 'lacteos': '🥛', 'frutas': '🍎', 'verduras': '🥬',
+      'carnes': '🥩', 'bebidas': '🥤', 'panadería': '🍞', 'panaderia': '🍞',
+      'despensa': '🛒', 'aseo': '🧹', 'snacks': '🍿', 'congelados': '🧊',
+      'licores': '🍷', 'mascotas': '🐾', 'cereales': '🥣', 'embutidos': '🌭'
+    };
+    const key = nombre.toLowerCase();
+    for (const [k, v] of Object.entries(map)) {
+      if (key.includes(k)) return v;
+    }
+    return '📦';
+  }
 }

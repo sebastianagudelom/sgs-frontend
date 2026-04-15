@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -13,6 +13,7 @@ import { CarritoService } from '../../services/carrito.service';
 })
 export class NavbarComponent {
   menuOpen = false;
+  userMenuOpen = false;
 
   constructor(
     public authService: AuthService,
@@ -24,10 +25,31 @@ export class NavbarComponent {
     this.menuOpen = !this.menuOpen;
   }
 
+  toggleUserMenu(): void {
+    this.userMenuOpen = !this.userMenuOpen;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.nav-user-area')) {
+      this.userMenuOpen = false;
+    }
+  }
+
+  onSearch(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const query = input.value.trim();
+    if (query) {
+      this.router.navigate(['/productos'], { queryParams: { buscar: query } });
+    }
+  }
+
   logout(): void {
     this.authService.logout();
     this.carritoService.vaciarCarrito();
     this.router.navigate(['/login']);
     this.menuOpen = false;
+    this.userMenuOpen = false;
   }
 }

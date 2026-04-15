@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ProductoService } from '../../services/producto.service';
 import { AuthService } from '../../services/auth.service';
 import { CarritoService } from '../../services/carrito.service';
+import { CategoriaService } from '../../services/categoria.service';
 import { ProductoResponse } from '../../models/producto.model';
+import { CategoriaResponse } from '../../models/categoria.model';
 
 @Component({
   selector: 'app-producto-lista',
@@ -17,6 +19,8 @@ import { ProductoResponse } from '../../models/producto.model';
 export class ProductoListaComponent implements OnInit {
   productos: ProductoResponse[] = [];
   productosFiltrados: ProductoResponse[] = [];
+  categorias: CategoriaResponse[] = [];
+  categoriaSeleccionada: number | null = null;
   busqueda = '';
   loading = true;
   isAdmin = false;
@@ -26,15 +30,32 @@ export class ProductoListaComponent implements OnInit {
 
   constructor(
     private productoService: ProductoService,
-private authService: AuthService,
+    private authService: AuthService,
     private carritoService: CarritoService,
-    private router: Router
+    private categoriaService: CategoriaService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.isAdmin = this.authService.isAdmin();
     this.isLoggedIn = this.authService.isLoggedIn();
+    this.cargarCategorias();
     this.cargarProductos();
+
+    this.route.queryParams.subscribe(params => {
+      if (params['buscar']) {
+        this.busqueda = params['buscar'];
+        this.filtrar();
+      }
+    });
+  }
+
+  cargarCategorias(): void {
+    this.categoriaService.listarTodas().subscribe({
+      next: (data) => this.categorias = data,
+      error: () => {}
+    });
   }
 
   cargarProductos(): void {
@@ -48,6 +69,7 @@ private authService: AuthService,
         this.productos = data;
         this.productosFiltrados = data;
         this.loading = false;
+        if (this.busqueda) this.filtrar();
       },
       error: () => {
         this.loading = false;
@@ -55,15 +77,31 @@ private authService: AuthService,
     });
   }
 
+  filtrarPorCategoria(categoriaId: number | null): void {
+    this.categoriaSeleccionada = categoriaId;
+    this.filtrar();
+  }
+
   buscar(): void {
-    if (this.busqueda.trim()) {
-      this.productosFiltrados = this.productos.filter(p =>
-        p.nombre.toLowerCase().includes(this.busqueda.toLowerCase()) ||
-        p.categoriaNombre.toLowerCase().includes(this.busqueda.toLowerCase())
-      );
-    } else {
-      this.productosFiltrados = this.productos;
+    this.filtrar();
+  }
+
+  private filtrar(): void {
+    let resultado = this.productos;
+
+    if (this.categoriaSeleccionada) {
+      resultado = resultado.filter(p => p.categoriaId === this.categoriaSeleccionada);
     }
+
+    if (this.busqueda.trim()) {
+      const term = this.busqueda.toLowerCase();
+      resultado = resultado.filter(p =>
+        p.nombre.toLowerCase().includes(term) ||
+        p.categoriaNombre.toLowerCase().includes(term)
+      );
+    }
+
+    this.productosFiltrados = resultado;
   }
 
   agregarProducto(): void {

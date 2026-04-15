@@ -42,6 +42,17 @@ export class CarritoComponent {
     }
   }
 
+  cambiarCantidad(item: ItemCarrito, delta: number): void {
+    const nuevaCantidad = item.cantidad + delta;
+    if (nuevaCantidad < 1 || nuevaCantidad > item.stock) return;
+    try {
+      this.carritoService.actualizarCantidad(item.productoId, nuevaCantidad);
+      this.errorMessage = '';
+    } catch (e: any) {
+      this.errorMessage = e.message;
+    }
+  }
+
   eliminarItem(productoId: number): void {
     this.carritoService.eliminarItem(productoId);
   }

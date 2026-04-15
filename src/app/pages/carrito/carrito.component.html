@@ -1,5 +1,13 @@
 <div class="page-container">
-  <h2>🛒 Mi Carrito</h2>
+  <div class="page-header">
+    <h2>
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+      Mi Carrito
+    </h2>
+    @if (items.length > 0) {
+      <span class="items-count">{{ carritoService.totalItems }} artículos</span>
+    }
+  </div>
 
   @if (errorMessage) {
     <div class="alert alert-error">{{ errorMessage }}</div>
@@ -10,8 +18,12 @@
 
   @if (items.length === 0) {
     <div class="empty-state">
-      <p>🛒 Tu carrito está vacío</p>
-      <a routerLink="/productos" class="btn btn-primary">Ver productos</a>
+      <div class="empty-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+      </div>
+      <h3>Tu carrito está vacío</h3>
+      <p>Agrega productos desde nuestra tienda</p>
+      <a routerLink="/productos" class="btn btn-primary">Explorar productos</a>
     </div>
   } @else {
     <div class="carrito-layout">
@@ -22,27 +34,28 @@
               @if (item.imagenUrl) {
                 <img [src]="item.imagenUrl" [alt]="item.nombre" />
               } @else {
-                <div class="no-image">📷</div>
+                <div class="no-image">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                </div>
               }
             </div>
             <div class="item-info">
               <h3>{{ item.nombre }}</h3>
-              <p class="item-precio">{{ formatPrecio(item.precio) }}</p>
+              <p class="item-precio-unit">{{ formatPrecio(item.precio) }} / und</p>
             </div>
             <div class="item-cantidad">
-              <label>Cantidad:</label>
-              <input
-                type="number"
-                [value]="item.cantidad"
-                min="1"
-                [max]="item.stock"
-                (change)="actualizarCantidad(item, $event)"
-              />
+              <div class="qty-control">
+                <button class="qty-btn" (click)="cambiarCantidad(item, -1)" [disabled]="item.cantidad <= 1">−</button>
+                <span class="qty-num">{{ item.cantidad }}</span>
+                <button class="qty-btn" (click)="cambiarCantidad(item, 1)" [disabled]="item.cantidad >= item.stock">+</button>
+              </div>
             </div>
             <div class="item-subtotal">
-              <span>{{ formatPrecio(item.precio * item.cantidad) }}</span>
+              {{ formatPrecio(item.precio * item.cantidad) }}
             </div>
-            <button class="btn-remove" (click)="eliminarItem(item.productoId)">🗑️</button>
+            <button class="btn-remove" (click)="eliminarItem(item.productoId)" title="Eliminar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            </button>
           </div>
         }
       </div>
@@ -53,14 +66,18 @@
           <span>Productos ({{ carritoService.totalItems }})</span>
           <span>{{ formatPrecio(carritoService.totalPrecio) }}</span>
         </div>
-        <hr />
+        <div class="resumen-linea">
+          <span>Envío</span>
+          <span class="envio-gratis">Gratis</span>
+        </div>
+        <div class="resumen-divider"></div>
         <div class="resumen-total">
           <span>Total</span>
           <span>{{ formatPrecio(carritoService.totalPrecio) }}</span>
         </div>
 
         <div class="form-group">
-          <label for="direccion">Dirección de envío (opcional)</label>
+          <label for="direccion">Dirección de envío</label>
           <textarea
             id="direccion"
             [(ngModel)]="direccionEnvio"
@@ -70,7 +87,7 @@
         </div>
 
         <button
-          class="btn btn-primary btn-checkout"
+          class="btn-checkout"
           (click)="realizarPedido()"
           [disabled]="loading"
         >
@@ -80,6 +97,11 @@
             Realizar Pedido
           }
         </button>
+
+        <div class="secure-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Compra 100% segura
+        </div>
       </div>
     </div>
   }

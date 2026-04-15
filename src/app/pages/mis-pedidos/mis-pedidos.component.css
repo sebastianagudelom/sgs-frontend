@@ -1,7 +1,7 @@
 .page-container {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 2rem 1.5rem;
 }
 
 .page-header {
@@ -13,25 +13,26 @@
 
 .page-header h2 {
   font-size: 1.75rem;
-  color: #1e293b;
+  color: #222;
   margin: 0;
+  font-weight: 800;
 }
 
 .loading-container {
   text-align: center;
   padding: 4rem;
-  color: #64748b;
+  color: #888;
 }
 
 .empty-state {
   text-align: center;
   padding: 4rem 1rem;
-  color: #94a3b8;
 }
 
 .empty-state p {
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
+  color: #999;
 }
 
 .pedidos-lista {
@@ -42,22 +43,28 @@
 
 .pedido-card {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  border: 1px solid #f0f0f0;
+  transition: box-shadow 0.2s;
+}
+
+.pedido-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .pedido-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.25rem;
+  padding: 1.25rem 1.5rem;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .pedido-header:hover {
-  background: #f8fafc;
+  background: #fafafa;
 }
 
 .pedido-info {
@@ -68,12 +75,12 @@
 
 .pedido-id {
   font-weight: 700;
-  color: #1e293b;
+  color: #222;
   font-size: 1rem;
 }
 
 .pedido-fecha {
-  color: #64748b;
+  color: #888;
   font-size: 0.85rem;
 }
 
@@ -84,36 +91,37 @@
 }
 
 .pedido-estado {
-  padding: 0.25rem 0.75rem;
+  padding: 0.3rem 0.85rem;
   border-radius: 20px;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-.estado-pendiente { background: #fef3c7; color: #92400e; }
-.estado-confirmado { background: #dbeafe; color: #1d4ed8; }
-.estado-enviado { background: #e0e7ff; color: #4338ca; }
-.estado-entregado { background: #dcfce7; color: #166534; }
-.estado-cancelado { background: #fef2f2; color: #dc2626; }
+.estado-pendiente { background: #fff3e0; color: #e65100; }
+.estado-confirmado { background: #e3f2fd; color: #1565c0; }
+.estado-enviado { background: #ede7f6; color: #4527a0; }
+.estado-entregado { background: #e8f5e9; color: #2e7d32; }
+.estado-cancelado { background: #ffebee; color: #c62828; }
 
 .pedido-total {
-  font-weight: 700;
-  color: #16a34a;
+  font-weight: 800;
+  color: #222;
   font-size: 1.1rem;
 }
 
 .expand-icon {
-  color: #94a3b8;
+  color: #bbb;
   font-size: 0.8rem;
 }
 
 .pedido-detalles {
-  border-top: 1px solid #f1f5f9;
-  padding: 1rem 1.25rem;
+  border-top: 1px solid #f0f0f0;
+  padding: 1.25rem 1.5rem;
+  background: #fafafa;
 }
 
 .direccion {
-  color: #475569;
+  color: #555;
   font-size: 0.9rem;
   margin-bottom: 1rem;
 }
@@ -128,15 +136,17 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.5rem 0;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 10px;
 }
 
 .det-imagen {
-  width: 48px;
-  height: 48px;
-  border-radius: 6px;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
   overflow: hidden;
-  background: #f1f5f9;
+  background: #f5f5f5;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -161,18 +171,18 @@
 
 .det-nombre {
   font-weight: 600;
-  color: #1e293b;
+  color: #222;
   font-size: 0.9rem;
 }
 
 .det-qty {
-  color: #64748b;
+  color: #888;
   font-size: 0.8rem;
 }
 
 .det-subtotal {
-  font-weight: 600;
-  color: #16a34a;
+  font-weight: 700;
+  color: #222;
   font-size: 0.95rem;
 }
 
