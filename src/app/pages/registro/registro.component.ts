@@ -29,7 +29,9 @@ export class RegistroComponent {
         Validators.required,
         Validators.minLength(8),
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/)
-      ]]
+      ]],
+      cedula: ['', [Validators.required, Validators.pattern(/^[0-9]{6,20}$/)]],
+      telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{7,15}$/)]]
     });
   }
 

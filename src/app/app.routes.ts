@@ -50,8 +50,18 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'mi-perfil',
+    loadComponent: () => import('./pages/perfil/perfil.component').then(m => m.PerfilComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'admin/pedidos',
     loadComponent: () => import('./pages/admin-pedidos/admin-pedidos.component').then(m => m.AdminPedidosComponent),
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/clientes',
+    loadComponent: () => import('./pages/admin-clientes/admin-clientes.component').then(m => m.AdminClientesComponent),
     canActivate: [adminGuard]
   },
   {

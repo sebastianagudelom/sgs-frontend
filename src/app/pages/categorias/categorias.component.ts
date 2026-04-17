@@ -121,16 +121,6 @@ export class CategoriasComponent implements OnInit {
   }
 
   getCategoryEmoji(nombre: string): string {
-    const map: { [key: string]: string } = {
-      'lácteos': '🥛', 'lacteos': '🥛', 'frutas': '🍎', 'verduras': '🥬',
-      'carnes': '🥩', 'bebidas': '🥤', 'panadería': '🍞', 'panaderia': '🍞',
-      'despensa': '🛒', 'aseo': '🧹', 'snacks': '🍿', 'congelados': '🧊',
-      'licores': '🍷', 'mascotas': '🐾', 'cereales': '🥣', 'embutidos': '🌭'
-    };
-    const key = nombre.toLowerCase();
-    for (const [k, v] of Object.entries(map)) {
-      if (key.includes(k)) return v;
-    }
-    return '📦';
+    return nombre.charAt(0).toUpperCase();
   }
 }

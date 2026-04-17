@@ -77,30 +77,64 @@
         </div>
 
         <div class="form-group">
-          <label for="direccion">Dirección de envío</label>
-          <textarea
-            id="direccion"
-            [(ngModel)]="direccionEnvio"
-            placeholder="Ej: Cra 15 #10-20, Armenia, Quindío"
-            rows="2"
-          ></textarea>
+          <label for="direccion">Dirección de envío <span class="required">*</span></label>
+
+          @if (direccionesGuardadas.length > 0) {
+            <div class="direcciones-guardadas">
+              @for (dir of direccionesGuardadas; track dir.id) {
+                <button
+                  class="dir-option"
+                  [class.dir-option-active]="direccionSeleccionadaId === dir.id && !usarDireccionPersonalizada"
+                  (click)="seleccionarDireccion(dir.id)"
+                >
+                  <span class="dir-option-nombre">{{ dir.nombre }}</span>
+                  <span class="dir-option-texto">{{ dir.direccion }}</span>
+                  @if (dir.predeterminada) {
+                    <span class="dir-badge">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </span>
+                  }
+                </button>
+              }
+              <button
+                class="dir-option dir-option-otra"
+                [class.dir-option-active]="usarDireccionPersonalizada"
+                (click)="usarOtraDireccion()"
+              >
+                <span class="dir-option-nombre">Otra dirección</span>
+                <span class="dir-option-texto">Escribir una dirección diferente</span>
+              </button>
+            </div>
+          }
+
+          @if (direccionesGuardadas.length === 0 || usarDireccionPersonalizada) {
+            <textarea
+              id="direccion"
+              [(ngModel)]="direccionEnvio"
+              placeholder="Ej: Cra 15 #10-20, Armenia, Quindío"
+              rows="2"
+              maxlength="500"
+              required
+            ></textarea>
+            <small class="char-count">{{ direccionEnvio.length }}/500</small>
+          }
         </div>
 
         <button
           class="btn-checkout"
           (click)="realizarPedido()"
-          [disabled]="loading"
+          [disabled]="loading || direccionEnvio.trim().length < 10"
         >
           @if (loading) {
             <span class="spinner"></span> Procesando...
           } @else {
-            Realizar Pedido
+            Pagar con Mercado Pago
           }
         </button>
 
         <div class="secure-badge">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Compra 100% segura
+          Pago seguro con Mercado Pago
         </div>
       </div>
     </div>

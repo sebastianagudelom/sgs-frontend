@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { PedidoService } from '../../services/pedido.service';
-import { PedidoResponse } from '../../models/pedido.model';
+import { PedidoResponse, FacturaResponse } from '../../models/pedido.model';
 
 @Component({
   selector: 'app-mis-pedidos',
@@ -15,6 +15,10 @@ export class MisPedidosComponent implements OnInit {
   pedidos: PedidoResponse[] = [];
   loading = true;
   pedidoExpandido: number | null = null;
+
+  facturaActual: FacturaResponse | null = null;
+  mostrarFactura = false;
+  cargandoFactura = false;
 
   constructor(private pedidoService: PedidoService) {}
 
@@ -42,10 +46,12 @@ export class MisPedidosComponent implements OnInit {
   getEstadoClass(estado: string): string {
     switch (estado) {
       case 'PENDIENTE': return 'estado-pendiente';
+      case 'PAGADO': return 'estado-pagado';
       case 'CONFIRMADO': return 'estado-confirmado';
       case 'ENVIADO': return 'estado-enviado';
       case 'ENTREGADO': return 'estado-entregado';
       case 'CANCELADO': return 'estado-cancelado';
+      case 'RECHAZADO': return 'estado-rechazado';
       default: return '';
     }
   }
@@ -53,12 +59,41 @@ export class MisPedidosComponent implements OnInit {
   getEstadoLabel(estado: string): string {
     switch (estado) {
       case 'PENDIENTE': return 'Pendiente';
+      case 'PAGADO': return 'Pagado';
       case 'CONFIRMADO': return 'Confirmado';
       case 'ENVIADO': return 'Enviado';
       case 'ENTREGADO': return 'Entregado';
       case 'CANCELADO': return 'Cancelado';
+      case 'RECHAZADO': return 'Rechazado';
       default: return estado;
     }
+  }
+
+  puedeVerFactura(estado: string): boolean {
+    return ['PAGADO', 'CONFIRMADO', 'ENVIADO', 'ENTREGADO'].includes(estado);
+  }
+
+  verFactura(pedidoId: number): void {
+    this.cargandoFactura = true;
+    this.pedidoService.obtenerFactura(pedidoId).subscribe({
+      next: (factura) => {
+        this.facturaActual = factura;
+        this.mostrarFactura = true;
+        this.cargandoFactura = false;
+      },
+      error: () => {
+        this.cargandoFactura = false;
+      }
+    });
+  }
+
+  cerrarFactura(): void {
+    this.mostrarFactura = false;
+    this.facturaActual = null;
+  }
+
+  imprimirFactura(): void {
+    window.print();
   }
 
   formatPrecio(precio: number): string {

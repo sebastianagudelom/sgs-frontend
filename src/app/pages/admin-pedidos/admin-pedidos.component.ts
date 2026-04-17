@@ -16,7 +16,7 @@ export class AdminPedidosComponent implements OnInit {
   loading = true;
   errorMessage = '';
   pedidoExpandido: number | null = null;
-  estados = ['PENDIENTE', 'CONFIRMADO', 'ENVIADO', 'ENTREGADO', 'CANCELADO'];
+  estados = ['PENDIENTE', 'PAGADO', 'CONFIRMADO', 'ENVIADO', 'ENTREGADO', 'CANCELADO', 'RECHAZADO'];
 
   constructor(private pedidoService: PedidoService) {}
 
@@ -59,10 +59,12 @@ export class AdminPedidosComponent implements OnInit {
   getEstadoClass(estado: string): string {
     switch (estado) {
       case 'PENDIENTE': return 'estado-pendiente';
+      case 'PAGADO': return 'estado-pagado';
       case 'CONFIRMADO': return 'estado-confirmado';
       case 'ENVIADO': return 'estado-enviado';
       case 'ENTREGADO': return 'estado-entregado';
       case 'CANCELADO': return 'estado-cancelado';
+      case 'RECHAZADO': return 'estado-rechazado';
       default: return '';
     }
   }
@@ -70,10 +72,12 @@ export class AdminPedidosComponent implements OnInit {
   getEstadoLabel(estado: string): string {
     switch (estado) {
       case 'PENDIENTE': return 'Pendiente';
+      case 'PAGADO': return 'Pagado';
       case 'CONFIRMADO': return 'Confirmado';
       case 'ENVIADO': return 'Enviado';
       case 'ENTREGADO': return 'Entregado';
       case 'CANCELADO': return 'Cancelado';
+      case 'RECHAZADO': return 'Rechazado';
       default: return estado;
     }
   }

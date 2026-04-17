@@ -45,6 +45,10 @@ export class ProductoService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
+  toggleActivo(id: number): Observable<ProductoResponse> {
+    return this.http.patch<ProductoResponse>(`${this.apiUrl}/${id}/toggle-activo`, {});
+  }
+
   subirImagen(archivo: File): Observable<{ url: string }> {
     const formData = new FormData();
     formData.append('archivo', archivo);

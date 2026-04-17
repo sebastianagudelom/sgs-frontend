@@ -2,9 +2,9 @@
   <!-- Top bar -->
   <div class="top-bar">
     <div class="top-bar-content">
-      <span>📍 Envío a todo Colombia</span>
-      <span>🕐 Horario: Lun-Dom 8:00 AM - 10:00 PM</span>
-      <span>📞 Soporte: 01 8000 123 456</span>
+      <span>Envio a todo Colombia</span>
+      <span>Horario: Lun-Dom 8:00 AM - 10:00 PM</span>
+      <span>Soporte: 01 8000 123 456</span>
     </div>
   </div>
 
@@ -12,7 +12,7 @@
   <div class="main-nav">
     <div class="nav-container">
       <a class="nav-brand" routerLink="/productos">
-        <span class="brand-icon">🛒</span>
+        <svg class="brand-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
         <span class="brand-text">SGS<span class="brand-highlight">Market</span></span>
       </a>
 
@@ -44,13 +44,15 @@
                 </div>
                 <div class="dropdown-divider"></div>
                 @if (authService.isAdmin()) {
-                  <a routerLink="/categorias" class="dropdown-item" (click)="userMenuOpen = false">📁 Categorías</a>
-                  <a routerLink="/admin/pedidos" class="dropdown-item" (click)="userMenuOpen = false">📦 Gestionar Pedidos</a>
+                  <a routerLink="/categorias" class="dropdown-item" (click)="userMenuOpen = false">Categorias</a>
+                  <a routerLink="/admin/pedidos" class="dropdown-item" (click)="userMenuOpen = false">Gestionar Pedidos</a>
+                  <a routerLink="/admin/clientes" class="dropdown-item" (click)="userMenuOpen = false">Clientes</a>
                 } @else {
-                  <a routerLink="/mis-pedidos" class="dropdown-item" (click)="userMenuOpen = false">📋 Mis Pedidos</a>
+                  <a routerLink="/mi-perfil" class="dropdown-item" (click)="userMenuOpen = false">Mi Perfil</a>
+                  <a routerLink="/mis-pedidos" class="dropdown-item" (click)="userMenuOpen = false">Mis Pedidos</a>
                 }
                 <div class="dropdown-divider"></div>
-                <button class="dropdown-item dropdown-logout" (click)="logout()">🚪 Cerrar sesión</button>
+                <button class="dropdown-item dropdown-logout" (click)="logout()">Cerrar sesion</button>
               </div>
             }
           </div>
@@ -73,7 +75,9 @@
         }
       </div>
 
-      <button class="nav-toggle" (click)="toggleMenu()">☰</button>
+      <button class="nav-toggle" (click)="toggleMenu()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
     </div>
   </div>
 
@@ -82,21 +86,27 @@
     <div class="category-bar">
       <div class="category-bar-content">
         <a routerLink="/productos" routerLinkActive="cat-active" [routerLinkActiveOptions]="{exact: true}" class="cat-link">
-          <span>🏠</span> Inicio
+          Inicio
         </a>
         <a routerLink="/productos" fragment="todos" class="cat-link">
-          <span>🛍️</span> Todos los productos
+          Todos los productos
         </a>
         @if (authService.isAdmin()) {
           <a routerLink="/categorias" routerLinkActive="cat-active" class="cat-link">
-            <span>📁</span> Categorías
+            Categorias
           </a>
           <a routerLink="/admin/pedidos" routerLinkActive="cat-active" class="cat-link">
-            <span>📦</span> Pedidos
+            Pedidos
+          </a>
+          <a routerLink="/admin/clientes" routerLinkActive="cat-active" class="cat-link">
+            Clientes
           </a>
         } @else {
+          <a routerLink="/mi-perfil" routerLinkActive="cat-active" class="cat-link">
+            Mi Perfil
+          </a>
           <a routerLink="/mis-pedidos" routerLinkActive="cat-active" class="cat-link">
-            <span>📋</span> Mis Pedidos
+            Mis Pedidos
           </a>
         }
       </div>
@@ -117,18 +127,20 @@
         <strong>{{ authService.getCurrentUser()?.nombre }}</strong>
         <span class="user-role-badge">{{ authService.getCurrentUser()?.rol }}</span>
       </div>
-      <a routerLink="/productos" class="mobile-link" (click)="menuOpen = false">🛍️ Productos</a>
+      <a routerLink="/productos" class="mobile-link" (click)="menuOpen = false">Productos</a>
       @if (authService.isAdmin()) {
-        <a routerLink="/categorias" class="mobile-link" (click)="menuOpen = false">📁 Categorías</a>
-        <a routerLink="/admin/pedidos" class="mobile-link" (click)="menuOpen = false">📦 Pedidos</a>
+        <a routerLink="/categorias" class="mobile-link" (click)="menuOpen = false">Categorias</a>
+        <a routerLink="/admin/pedidos" class="mobile-link" (click)="menuOpen = false">Pedidos</a>
+        <a routerLink="/admin/clientes" class="mobile-link" (click)="menuOpen = false">Clientes</a>
       } @else {
-        <a routerLink="/carrito" class="mobile-link" (click)="menuOpen = false">🛒 Carrito ({{ carritoService.totalItems }})</a>
-        <a routerLink="/mis-pedidos" class="mobile-link" (click)="menuOpen = false">📋 Mis Pedidos</a>
+        <a routerLink="/mi-perfil" class="mobile-link" (click)="menuOpen = false">Mi Perfil</a>
+        <a routerLink="/carrito" class="mobile-link" (click)="menuOpen = false">Carrito ({{ carritoService.totalItems }})</a>
+        <a routerLink="/mis-pedidos" class="mobile-link" (click)="menuOpen = false">Mis Pedidos</a>
       }
-      <button class="mobile-link mobile-logout" (click)="logout()">🚪 Cerrar sesión</button>
+      <button class="mobile-link mobile-logout" (click)="logout()">Cerrar sesion</button>
     } @else {
-      <a routerLink="/login" class="mobile-link" (click)="menuOpen = false">👤 Iniciar Sesión</a>
-      <a routerLink="/registro" class="mobile-link" (click)="menuOpen = false">📝 Registrarse</a>
+      <a routerLink="/login" class="mobile-link" (click)="menuOpen = false">Iniciar Sesion</a>
+      <a routerLink="/registro" class="mobile-link" (click)="menuOpen = false">Registrarse</a>
     }
   </div>
 }

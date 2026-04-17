@@ -8,6 +8,8 @@ export interface RegistroRequest {
   apellido: string;
   email: string;
   password: string;
+  cedula: string;
+  telefono: string;
 }
 
 export interface VerificacionRequest {

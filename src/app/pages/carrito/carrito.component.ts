@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CarritoService } from '../../services/carrito.service';
-import { PedidoService } from '../../services/pedido.service';
+import { PagoService } from '../../services/pago.service';
+import { PerfilService } from '../../services/perfil.service';
 import { ItemCarrito } from '../../models/pedido.model';
+import { DireccionResponse } from '../../models/perfil.model';
 
 @Component({
   selector: 'app-carrito',
@@ -13,17 +15,53 @@ import { ItemCarrito } from '../../models/pedido.model';
   templateUrl: './carrito.component.html',
   styleUrl: './carrito.component.css'
 })
-export class CarritoComponent {
+export class CarritoComponent implements OnInit {
   direccionEnvio = '';
   errorMessage = '';
   successMessage = '';
   loading = false;
 
+  direccionesGuardadas: DireccionResponse[] = [];
+  direccionSeleccionadaId: number | null = null;
+  usarDireccionPersonalizada = false;
+
   constructor(
     public carritoService: CarritoService,
-    private pedidoService: PedidoService,
+    private pagoService: PagoService,
+    private perfilService: PerfilService,
     private router: Router
   ) {}
+
+  ngOnInit(): void {
+    this.perfilService.listarDirecciones().subscribe({
+      next: (dirs) => {
+        this.direccionesGuardadas = dirs;
+        const predeterminada = dirs.find(d => d.predeterminada);
+        if (predeterminada) {
+          this.direccionSeleccionadaId = predeterminada.id;
+          this.direccionEnvio = predeterminada.direccion;
+        } else if (dirs.length > 0) {
+          this.direccionSeleccionadaId = dirs[0].id;
+          this.direccionEnvio = dirs[0].direccion;
+        }
+      }
+    });
+  }
+
+  seleccionarDireccion(id: number): void {
+    this.usarDireccionPersonalizada = false;
+    this.direccionSeleccionadaId = id;
+    const dir = this.direccionesGuardadas.find(d => d.id === id);
+    if (dir) {
+      this.direccionEnvio = dir.direccion;
+    }
+  }
+
+  usarOtraDireccion(): void {
+    this.usarDireccionPersonalizada = true;
+    this.direccionSeleccionadaId = null;
+    this.direccionEnvio = '';
+  }
 
   get items(): ItemCarrito[] {
     return this.carritoService.items;
@@ -63,23 +101,36 @@ export class CarritoComponent {
       return;
     }
 
+    const dir = this.direccionEnvio.trim();
+    if (!dir) {
+      this.errorMessage = 'La dirección de envío es obligatoria';
+      return;
+    }
+    if (dir.length < 10) {
+      this.errorMessage = 'La dirección debe tener al menos 10 caracteres';
+      return;
+    }
+    if (dir.length > 500) {
+      this.errorMessage = 'La dirección no puede superar los 500 caracteres';
+      return;
+    }
+
     this.loading = true;
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.pedidoService.crearPedido({
+    this.pagoService.crearPreferencia({
       items: this.items.map(i => ({ productoId: i.productoId, cantidad: i.cantidad })),
       direccionEnvio: this.direccionEnvio
     }).subscribe({
-      next: () => {
+      next: (response) => {
         this.carritoService.vaciarCarrito();
-        this.successMessage = '¡Pedido realizado exitosamente!';
-        this.loading = false;
-        setTimeout(() => this.router.navigate(['/mis-pedidos']), 2000);
+        // Redirigir al checkout de Mercado Pago
+        window.location.href = response.initPoint;
       },
       error: (err) => {
         this.loading = false;
-        this.errorMessage = err.error?.mensaje || 'Error al realizar el pedido';
+        this.errorMessage = err.error?.mensaje || err.error?.message || 'Error al iniciar el pago';
       }
     });
   }

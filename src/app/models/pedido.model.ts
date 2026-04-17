@@ -33,3 +33,18 @@ export interface PedidoResponse {
   fechaCreacion: string;
   fechaActualizacion: string;
 }
+
+export interface FacturaResponse {
+  pedidoId: number;
+  clienteNombre: string;
+  clienteEmail: string;
+  clienteCedula: string;
+  clienteTelefono: string;
+  direccionEnvio: string;
+  estado: string;
+  mercadoPagoPaymentId: string;
+  total: number;
+  detalles: DetallePedidoResponse[];
+  fechaPago: string;
+  fechaCreacion: string;
+}

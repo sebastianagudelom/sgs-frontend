@@ -113,8 +113,20 @@ export class ProductoListaComponent implements OnInit {
   }
 
   eliminarProducto(id: number): void {
-    if (confirm('¿Estás seguro de eliminar este producto?')) {
+    if (confirm('Esta accion eliminara el producto permanentemente. ¿Continuar?')) {
       this.productoService.eliminar(id).subscribe({
+        next: () => this.cargarProductos(),
+        error: (err) => {
+          alert(err.error?.message || err.error?.mensaje || 'No se puede eliminar el producto');
+        }
+      });
+    }
+  }
+
+  toggleActivo(producto: ProductoResponse): void {
+    const accion = producto.activo ? 'desactivar' : 'activar';
+    if (confirm(`¿Deseas ${accion} el producto "${producto.nombre}"?`)) {
+      this.productoService.toggleActivo(producto.id).subscribe({
         next: () => this.cargarProductos()
       });
     }

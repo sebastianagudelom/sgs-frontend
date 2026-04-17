@@ -248,6 +248,18 @@
   margin-bottom: 0.35rem;
 }
 
+.required {
+  color: #c62828;
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 0.25rem;
+}
+
 textarea {
   width: 100%;
   padding: 0.65rem 0.85rem;
@@ -320,4 +332,63 @@ textarea:focus {
   .carrito-resumen {
     position: static;
   }
+}
+
+/* ── Direcciones guardadas ── */
+.direcciones-guardadas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.dir-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fafafa;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  position: relative;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.dir-option:hover {
+  border-color: #a5d6a7;
+  background: #f1f8e9;
+}
+
+.dir-option-active {
+  border-color: #43a047;
+  background: #e8f5e9;
+}
+
+.dir-option-nombre {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #222;
+}
+
+.dir-option-texto {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.dir-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.dir-option-otra {
+  border-style: dashed;
+  background: white;
 }
