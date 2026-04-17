@@ -1,45 +1,65 @@
-# SGS Supermercado — Frontend
+# SGS Market — Frontend
 
-> Aplicación web desarrollada con **Angular 20** para la gestión de un supermercado. Permite a los clientes explorar productos y a los administradores gestionar el catálogo completo con categorías.
+> Aplicacion web desarrollada con **Angular 20** para un supermercado en linea. Incluye catalogo de productos, carrito de compras, pagos con MercadoPago, seguimiento de pedidos, perfil de usuario con direcciones, y panel completo de administracion.
+
+**Produccion:** [https://sgsmarket.duckdns.org](https://sgsmarket.duckdns.org)
 
 ---
 
 ## Tabla de Contenidos
 
-- [Características](#características)
-- [Tecnologías](#tecnologías)
+- [Caracteristicas](#caracteristicas)
+- [Tecnologias](#tecnologias)
 - [Requisitos Previos](#requisitos-previos)
-- [Instalación y Ejecución](#instalación-y-ejecución)
+- [Instalacion y Ejecucion](#instalacion-y-ejecucion)
 - [Estructura del Proyecto](#estructura-del-proyecto)
 - [Vistas y Rutas](#vistas-y-rutas)
-- [Autenticación](#autenticación)
+- [Autenticacion](#autenticacion)
 - [Variables de Entorno](#variables-de-entorno)
-- [Build para Producción](#build-para-producción)
+- [Build para Produccion](#build-para-produccion)
+- [Despliegue](#despliegue)
 
 ---
 
-## Características
+## Caracteristicas
 
-- ✅ Registro de usuarios con verificación de cuenta por código enviado al correo
-- ✅ Login con JWT — sesión persistente en `localStorage`
-- ✅ Navbar dinámico según el rol del usuario (`ADMIN` / `CLIENTE`)
-- ✅ Catálogo de productos con búsqueda en tiempo real, badges de stock y precio en COP
-- ✅ Formulario de productos (crear / editar) con selección de categorías
-- ✅ Gestión de categorías con tabla y modal integrado
-- ✅ Rutas protegidas por guards: `authGuard`, `adminGuard`, `guestGuard`
-- ✅ Interceptor HTTP que adjunta el token JWT automáticamente en cada petición
-- ✅ Manejo de errores centralizado con mensajes descriptivos
+### Publico
+- Catalogo de productos con busqueda en tiempo real y filtro por categorias
+- Barra de categorias en el navbar para navegacion rapida
+- Detalle de producto con galeria de imagenes, stock y precio en COP
+- Registro con validacion de cedula y telefono, verificacion por correo
+
+### Cliente (autenticado)
+- Carrito de compras con cantidades editables y resumen de total
+- Pago integrado con MercadoPago Checkout Pro
+- Historial de pedidos con estados en tiempo real (7 estados)
+- Factura descargable por pedido
+- Perfil editable con gestion de direcciones (CRUD + predeterminada)
+
+### Administrador
+- CRUD de productos con activacion/desactivacion y eliminacion definitiva
+- CRUD de categorias con modal integrado
+- Panel de pedidos con filtro por estado y cambio de estado
+- Panel de clientes con busqueda, filtros y estadisticas (total pedidos, total gastado)
+
+### Tecnico
+- Componentes standalone con lazy loading
+- Reactive Forms con validaciones
+- Interceptor HTTP para JWT automatico
+- Guards: `authGuard`, `adminGuard`, `guestGuard`
+- Navbar responsive con menu segun rol
+- Iconos SVG (sin emojis)
 
 ---
 
-## Tecnologías
+## Tecnologias
 
-| Tecnología | Versión |
+| Tecnologia | Version |
 |---|---|
 | Angular | 20.2.0 |
-| TypeScript | 5.x |
-| Node.js | 22.18.0 |
-| npm | 11.6.2 |
+| TypeScript | 5.9.x |
+| Node.js | 22.x |
+| npm | 11.x |
 | Angular Router | Lazy Loading |
 | Angular Forms | Reactive Forms |
 | HttpClient | Con interceptor funcional |
@@ -54,28 +74,27 @@
   ```bash
   npm install -g @angular/cli
   ```
-- El **backend SGS** corriendo en `http://localhost:8080`
-  → [sgs-backend](https://github.com/sebastianagudelom/sgs-backend)
+- El **backend SGS** corriendo en `https://localhost:8443`
 
 ---
 
-## Instalación y Ejecución
+## Instalacion y Ejecucion
 
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/sebastianagudelom/sgs-frontend.git
+# Clonar el repositorio
+git clone <url-del-repo>
 cd sgs-frontend
 
-# 2. Instalar dependencias
+# Instalar dependencias
 npm install
 
-# 3. Ejecutar en modo desarrollo
+# Ejecutar en modo desarrollo
 ng serve
 ```
 
-La aplicación estará disponible en: **`http://localhost:4200`**
+La aplicacion estara disponible en **`http://localhost:4200`**.
 
-> Asegúrate de que el backend esté corriendo antes de iniciar el frontend.
+> El proxy de desarrollo (`proxy.conf.json`) redirige `/api` y `/uploads` a `https://localhost:8443`.
 
 ---
 
@@ -83,98 +102,135 @@ La aplicación estará disponible en: **`http://localhost:4200`**
 
 ```
 src/
-├── environments/
-│   ├── environment.ts          # Desarrollo (apunta a localhost:8080)
-│   └── environment.prod.ts     # Producción
-└── app/
-    ├── components/
-    │   └── navbar/             # Navbar responsive con menú según rol
-    ├── guards/
-    │   └── auth.guard.ts       # authGuard, adminGuard, guestGuard
-    ├── interceptors/
-    │   └── auth.interceptor.ts # Adjunta Bearer token en cada request
-    ├── models/
-    │   ├── auth.model.ts       # Interfaces: AuthResponse, LoginRequest, etc.
-    │   ├── categoria.model.ts
-    │   └── producto.model.ts
-    ├── pages/
-    │   ├── login/              # Formulario de inicio de sesión
-    │   ├── registro/           # Formulario de registro con validaciones
-    │   ├── verificar/          # Ingreso del código de verificación
-    │   ├── producto-lista/     # Catálogo público con búsqueda
-    │   ├── producto-form/      # Crear / editar producto (solo ADMIN)
-    │   └── categorias/         # Tabla y modal de categorías (solo ADMIN)
-    ├── services/
-    │   ├── auth.service.ts     # BehaviorSubject, login, logout, JWT
-    │   ├── producto.service.ts # CRUD de productos
-    │   └── categoria.service.ts# CRUD de categorías
-    ├── app.config.ts           # Providers: HttpClient, Router
-    ├── app.routes.ts           # Rutas lazy-loaded con guards
-    ├── app.ts                  # Componente raíz
-    └── app.html                # Layout principal: navbar + router-outlet
+|-- environments/
+|   |-- environment.ts              # Desarrollo
+|   +-- environment.prod.ts         # Produccion (apiUrl: /api)
++-- app/
+    |-- components/
+    |   +-- navbar/                  # Navbar responsive con menu segun rol
+    |-- guards/
+    |   +-- auth.guard.ts           # authGuard, adminGuard, guestGuard
+    |-- interceptors/
+    |   +-- auth.interceptor.ts     # Adjunta Bearer token en cada request
+    |-- models/
+    |   |-- auth.model.ts           # AuthResponse, LoginRequest, RegistroRequest
+    |   |-- categoria.model.ts
+    |   |-- cliente.model.ts        # ClienteResponse (panel admin)
+    |   |-- pedido.model.ts         # PedidoResponse, DetallePedidoResponse, etc.
+    |   |-- perfil.model.ts         # PerfilResponse, DireccionRequest/Response
+    |   +-- producto.model.ts
+    |-- pages/
+    |   |-- admin-clientes/         # Panel de gestion de clientes
+    |   |-- admin-pedidos/          # Panel de gestion de pedidos
+    |   |-- carrito/                # Carrito de compras
+    |   |-- categorias/             # CRUD de categorias (admin)
+    |   |-- login/                  # Inicio de sesion
+    |   |-- mis-pedidos/            # Historial de pedidos del cliente
+    |   |-- perfil/                 # Perfil y direcciones del usuario
+    |   |-- producto-detalle/       # Vista detallada de producto
+    |   |-- producto-form/          # Crear/editar producto (admin)
+    |   |-- producto-lista/         # Catalogo con busqueda y filtros
+    |   |-- registro/               # Registro con cedula y telefono
+    |   +-- verificar/              # Verificacion de cuenta por codigo
+    |-- services/
+    |   |-- admin.service.ts        # Gestion de clientes
+    |   |-- auth.service.ts         # Login, logout, JWT, BehaviorSubject
+    |   |-- carrito.service.ts      # Carrito local con localStorage
+    |   |-- categoria.service.ts    # CRUD categorias
+    |   |-- pago.service.ts         # Integracion MercadoPago
+    |   |-- pedido.service.ts       # Pedidos y facturas
+    |   |-- perfil.service.ts       # Perfil y direcciones
+    |   +-- producto.service.ts     # CRUD productos + toggle activo
+    |-- app.config.ts               # Providers: HttpClient, Router
+    |-- app.routes.ts               # Rutas lazy-loaded con guards
+    |-- app.ts                      # Componente raiz
+    +-- app.html                    # Layout: navbar + router-outlet
 ```
 
 ---
 
 ## Vistas y Rutas
 
-| Ruta | Componente | Guard | Descripción |
+| Ruta | Componente | Guard | Descripcion |
 |---|---|---|---|
-| `/login` | `LoginComponent` | `guestGuard` | Inicio de sesión |
-| `/registro` | `RegistroComponent` | `guestGuard` | Crear cuenta nueva |
-| `/verificar` | `VerificarComponent` | — | Verificar cuenta con código |
-| `/productos` | `ProductoListaComponent` | — | Catálogo público |
-| `/productos/nuevo` | `ProductoFormComponent` | `adminGuard` | Crear producto |
-| `/productos/editar/:id` | `ProductoFormComponent` | `adminGuard` | Editar producto |
-| `/categorias` | `CategoriasComponent` | `adminGuard` | Gestionar categorías |
-| `/` | — | — | Redirect a `/productos` |
+| `/productos` | ProductoListaComponent | — | Catalogo publico |
+| `/productos/:id` | ProductoDetalleComponent | — | Detalle de producto |
+| `/productos/nuevo` | ProductoFormComponent | `adminGuard` | Crear producto |
+| `/productos/editar/:id` | ProductoFormComponent | `adminGuard` | Editar producto |
+| `/categorias` | CategoriasComponent | `adminGuard` | Gestion de categorias |
+| `/carrito` | CarritoComponent | `authGuard` | Carrito de compras |
+| `/mis-pedidos` | MisPedidosComponent | `authGuard` | Historial de pedidos |
+| `/mi-perfil` | PerfilComponent | `authGuard` | Perfil y direcciones |
+| `/admin/pedidos` | AdminPedidosComponent | `adminGuard` | Gestion de pedidos |
+| `/admin/clientes` | AdminClientesComponent | `adminGuard` | Gestion de clientes |
+| `/login` | LoginComponent | `guestGuard` | Inicio de sesion |
+| `/registro` | RegistroComponent | `guestGuard` | Crear cuenta |
+| `/verificar` | VerificarComponent | — | Verificar con codigo |
+| `/` | — | — | Redirige a `/productos` |
 
 ---
 
-## Autenticación
+## Autenticacion
 
-La autenticación se maneja mediante **JWT** almacenado en `localStorage`:
+La autenticacion usa **JWT** almacenado en `localStorage`:
 
-1. Al hacer login, el token y los datos del usuario se almacenan en `localStorage`.
-2. El `authInterceptor` lee el token y agrega el header `Authorization: Bearer <token>` en cada petición HTTP.
-3. Los guards verifican el estado del `AuthService` antes de activar cada ruta.
-
-**Roles disponibles:**
+1. Al hacer login, el token y los datos del usuario se guardan en `localStorage`
+2. El `authInterceptor` agrega `Authorization: Bearer <token>` en cada peticion HTTP
+3. Los guards verifican el estado del `AuthService` antes de activar cada ruta
 
 | Rol | Permisos |
 |---|---|
-| `ADMIN` | Ver, crear, editar y eliminar productos y categorías |
-| `CLIENTE` | Ver catálogo de productos |
+| `ADMIN` | Todo: productos, categorias, pedidos, clientes |
+| `CLIENTE` | Catalogo, carrito, pedidos propios, perfil |
 
 ---
 
 ## Variables de Entorno
 
-Las URLs de la API se configuran en los archivos de entorno:
-
 ```typescript
-// src/environments/environment.ts
+// src/environments/environment.ts (desarrollo)
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080/api'
+  apiUrl: '/api'   // Proxied via proxy.conf.json
+};
+
+// src/environments/environment.prod.ts (produccion)
+export const environment = {
+  production: true,
+  apiUrl: '/api'   // Relative, served by Nginx
 };
 ```
 
-Para cambiar el servidor de backend, modifica `apiUrl` en el archivo correspondiente.
+---
+
+## Build para Produccion
+
+```bash
+ng build --configuration=production
+```
+
+Los archivos compilados se generan en `dist/sgs-frontend/browser/`.
 
 ---
 
-## Build para Producción
+## Despliegue
 
-```bash
-ng build --configuration production
+En produccion, Nginx sirve los archivos estaticos del frontend y hace proxy al backend:
+
+```
+https://sgsmarket.duckdns.org/          -> /var/www/sgs-frontend/ (Angular)
+https://sgsmarket.duckdns.org/api/      -> http://localhost:8080  (Spring Boot)
+https://sgsmarket.duckdns.org/uploads/  -> /opt/sgs/uploads/      (Imagenes)
 ```
 
-Los archivos compilados se generarán en `dist/sgs-frontend/browser/`.
+Para desplegar desde la maquina local:
+```bash
+bash deploy/deploy.sh <IP_EC2> <PEM_FILE>
+```
 
 ---
 
 ## Proyecto Universitario
 
-Desarrollado para la asignatura **Software 3** — Universidad del Quindío.
-Backend: [sgs-backend](https://github.com/sebastianagudelom/sgs-backend)
+Desarrollado para la asignatura **Software 3** — Universidad del Quindio.
+Backend: [sgs-backend](../sgs-backend/)
