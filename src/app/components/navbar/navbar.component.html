@@ -46,6 +46,7 @@
                 @if (authService.isAdmin()) {
                   <a routerLink="/categorias" class="dropdown-item" (click)="userMenuOpen = false">Categorias</a>
                   <a routerLink="/admin/pedidos" class="dropdown-item" (click)="userMenuOpen = false">Gestionar Pedidos</a>
+                  <a routerLink="/admin/inventario-alertas" class="dropdown-item" (click)="userMenuOpen = false">Alertas de Inventario</a>
                   <a routerLink="/admin/clientes" class="dropdown-item" (click)="userMenuOpen = false">Clientes</a>
                 } @else {
                   <a routerLink="/mi-perfil" class="dropdown-item" (click)="userMenuOpen = false">Mi Perfil</a>
@@ -98,6 +99,9 @@
           <a routerLink="/admin/pedidos" routerLinkActive="cat-active" class="cat-link">
             Pedidos
           </a>
+          <a routerLink="/admin/inventario-alertas" routerLinkActive="cat-active" class="cat-link">
+            Inventario
+          </a>
           <a routerLink="/admin/clientes" routerLinkActive="cat-active" class="cat-link">
             Clientes
           </a>
@@ -131,6 +135,7 @@
       @if (authService.isAdmin()) {
         <a routerLink="/categorias" class="mobile-link" (click)="menuOpen = false">Categorias</a>
         <a routerLink="/admin/pedidos" class="mobile-link" (click)="menuOpen = false">Pedidos</a>
+        <a routerLink="/admin/inventario-alertas" class="mobile-link" (click)="menuOpen = false">Inventario</a>
         <a routerLink="/admin/clientes" class="mobile-link" (click)="menuOpen = false">Clientes</a>
       } @else {
         <a routerLink="/mi-perfil" class="mobile-link" (click)="menuOpen = false">Mi Perfil</a>

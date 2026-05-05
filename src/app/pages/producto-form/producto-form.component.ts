@@ -36,6 +36,7 @@ export class ProductoFormComponent implements OnInit {
       descripcion: ['', [Validators.maxLength(500)]],
       precio: [null, [Validators.required, Validators.min(1)]],
       stock: [null, [Validators.required, Validators.min(0)]],
+      stockMinimo: [5, [Validators.required, Validators.min(1)]],
       imagenUrl: [''],
       categoriaId: [null, [Validators.required]]
     });
@@ -66,6 +67,7 @@ export class ProductoFormComponent implements OnInit {
           descripcion: producto.descripcion,
           precio: producto.precio,
           stock: producto.stock,
+          stockMinimo: producto.stockMinimo || 5,
           imagenUrl: producto.imagenUrl,
           categoriaId: producto.categoriaId
         });

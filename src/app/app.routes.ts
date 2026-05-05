@@ -65,6 +65,11 @@ export const routes: Routes = [
     canActivate: [adminGuard]
   },
   {
+    path: 'admin/inventario-alertas',
+    loadComponent: () => import('./pages/admin-inventario-alertas/admin-inventario-alertas.component').then(m => m.AdminInventarioAlertasComponent),
+    canActivate: [adminGuard]
+  },
+  {
     path: '',
     redirectTo: 'productos',
     pathMatch: 'full'

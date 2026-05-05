@@ -5,11 +5,12 @@ import { ProductoService } from '../../services/producto.service';
 import { AuthService } from '../../services/auth.service';
 import { CarritoService } from '../../services/carrito.service';
 import { ProductoResponse } from '../../models/producto.model';
+import { ProductReviewsComponent } from '../../components/product-reviews/product-reviews.component';
 
 @Component({
   selector: 'app-producto-detalle',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProductReviewsComponent],
   templateUrl: './producto-detalle.component.html',
   styleUrl: './producto-detalle.component.css'
 })

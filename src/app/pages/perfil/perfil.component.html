@@ -67,11 +67,11 @@
             <label for="dirNombre">Nombre <span class="required">*</span></label>
             <input id="dirNombre" type="text" [(ngModel)]="dirNombre" maxlength="50" placeholder="Ej: Mi casa, Trabajo, Casa de mi novia..." />
           </div>
-          <div class="form-group">
-            <label for="dirDireccion">Dirección completa <span class="required">*</span></label>
-            <textarea id="dirDireccion" [(ngModel)]="dirDireccion" rows="2" maxlength="500" placeholder="Ej: Cra 15 #10-20, Armenia, Quindío"></textarea>
-            <small class="char-count">{{ dirDireccion.length }}/500</small>
-          </div>
+          <app-address-map
+            [(direccion)]="dirDireccion"
+            [(latitud)]="dirLatitud"
+            [(longitud)]="dirLongitud"
+          ></app-address-map>
           <div class="form-check">
             <label>
               <input type="checkbox" [(ngModel)]="dirPredeterminada" />
@@ -105,6 +105,9 @@
                   }
                 </div>
                 <div class="dir-texto">{{ dir.direccion }}</div>
+                @if (dir.latitud !== null && dir.longitud !== null) {
+                  <div class="dir-coords">Lat {{ dir.latitud }} · Lng {{ dir.longitud }}</div>
+                }
               </div>
               <div class="dir-acciones">
                 @if (!dir.predeterminada) {

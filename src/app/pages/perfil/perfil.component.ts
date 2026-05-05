@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PerfilService } from '../../services/perfil.service';
 import { PerfilResponse, DireccionResponse, DireccionRequest } from '../../models/perfil.model';
+import { AddressMapComponent } from '../../components/address-map/address-map.component';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AddressMapComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css'
 })
@@ -30,6 +31,8 @@ export class PerfilComponent implements OnInit {
   editandoDireccionId: number | null = null;
   dirNombre = '';
   dirDireccion = '';
+  dirLatitud: number | null = null;
+  dirLongitud: number | null = null;
   dirPredeterminada = false;
   savingDir = false;
 
@@ -87,6 +90,8 @@ export class PerfilComponent implements OnInit {
     this.editandoDireccionId = null;
     this.dirNombre = '';
     this.dirDireccion = '';
+    this.dirLatitud = null;
+    this.dirLongitud = null;
     this.dirPredeterminada = false;
     this.mostrarFormDireccion = true;
   }
@@ -95,6 +100,8 @@ export class PerfilComponent implements OnInit {
     this.editandoDireccionId = dir.id;
     this.dirNombre = dir.nombre;
     this.dirDireccion = dir.direccion;
+    this.dirLatitud = dir.latitud;
+    this.dirLongitud = dir.longitud;
     this.dirPredeterminada = dir.predeterminada;
     this.mostrarFormDireccion = true;
   }
@@ -111,9 +118,12 @@ export class PerfilComponent implements OnInit {
     const request: DireccionRequest = {
       nombre: this.dirNombre,
       direccion: this.dirDireccion,
+      latitud: this.dirLatitud,
+      longitud: this.dirLongitud,
       predeterminada: this.dirPredeterminada
     };
 
+    const editando = !!this.editandoDireccionId;
     const obs = this.editandoDireccionId
       ? this.perfilService.actualizarDireccion(this.editandoDireccionId, request)
       : this.perfilService.crearDireccion(request);
@@ -123,7 +133,7 @@ export class PerfilComponent implements OnInit {
         this.mostrarFormDireccion = false;
         this.editandoDireccionId = null;
         this.savingDir = false;
-        this.successMessage = this.editandoDireccionId ? 'Dirección actualizada' : 'Dirección agregada';
+        this.successMessage = editando ? 'Dirección actualizada' : 'Dirección agregada';
         this.cargarPerfil();
       },
       error: (err) => {

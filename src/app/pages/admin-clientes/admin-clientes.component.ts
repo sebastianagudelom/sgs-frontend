@@ -48,7 +48,7 @@ export class AdminClientesComponent implements OnInit {
     }
 
     if (this.busqueda.trim()) {
-      const term = this.busqueda.toLowerCase();
+      const term = this.busqueda.trim().toLowerCase();
       resultado = resultado.filter(c =>
         c.nombre.toLowerCase().includes(term) ||
         c.apellido.toLowerCase().includes(term) ||

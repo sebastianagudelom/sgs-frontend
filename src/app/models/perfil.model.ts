@@ -18,6 +18,8 @@ export interface PerfilResponse {
 export interface DireccionRequest {
   nombre: string;
   direccion: string;
+  latitud: number | null;
+  longitud: number | null;
   predeterminada: boolean;
 }
 
@@ -25,5 +27,7 @@ export interface DireccionResponse {
   id: number;
   nombre: string;
   direccion: string;
+  latitud: number | null;
+  longitud: number | null;
   predeterminada: boolean;
 }

@@ -3,6 +3,7 @@ export interface ProductoRequest {
   descripcion: string;
   precio: number;
   stock: number;
+  stockMinimo: number;
   imagenUrl: string;
   categoriaId: number;
 }
@@ -13,6 +14,7 @@ export interface ProductoResponse {
   descripcion: string;
   precio: number;
   stock: number;
+  stockMinimo: number;
   imagenUrl: string;
   activo: boolean;
   categoriaId: number;
