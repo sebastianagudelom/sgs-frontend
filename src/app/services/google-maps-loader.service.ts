@@ -34,7 +34,7 @@ export class GoogleMapsLoaderService {
       };
 
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(environment.googleMapsApiKey)}&callback=${callbackName}&libraries=places`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(environment.googleMapsApiKey)}&loading=async&callback=${callbackName}`;
       script.async = true;
       script.defer = true;
       script.dataset['googleMaps'] = 'sgs';

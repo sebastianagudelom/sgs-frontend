@@ -201,6 +201,30 @@ export const environment = {
 };
 ```
 
+### Google Maps API
+
+Para mostrar la dirección en un mapa (componente `app-address-map`) necesitas una clave de Google Maps. Pasos:
+
+1. Ve a https://console.cloud.google.com/ y crea o selecciona un proyecto.
+2. Habilita las APIs: **Maps JavaScript API** y **Geocoding API** (o Places si usarás autocompletado).
+3. En la sección de credenciales crea una API key y restringe por HTTP (dominios) o por IP según corresponda.
+4. Copia la clave en `src/environments/environment.ts` (desarrollo) y `src/environments/environment.prod.ts` (producción) en la propiedad `googleMapsApiKey`.
+   - No subas la clave a repositorios públicos.
+5. Asegúrate de que el proyecto tenga facturación habilitada (Google Maps requiere facturación activa).
+
+Ejemplo rápido para desarrollo:
+
+```ts
+// src/environments/environment.ts
+export const environment = {
+  production: false,
+  apiUrl: '/api',
+  googleMapsApiKey: 'TU_CLAVE_AQUI'
+}
+```
+
+Luego ejecuta `ng serve` y abre la pantalla de `Mi Perfil` > `+ Agregar dirección` para probar el mapa.
+
 ---
 
 ## Build para Produccion

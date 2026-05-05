@@ -1,14 +1,15 @@
 <div class="address-map">
   <div class="form-group">
     <label for="mapDireccion">Dirección completa <span class="required">*</span></label>
-    <textarea
+    <input
       id="mapDireccion"
-      [ngModel]="direccion"
-      (ngModelChange)="onDireccionInput($event)"
-      rows="2"
+      #direccionInput
+      type="text"
+      [value]="direccion"
+      (input)="onDireccionInput($any($event.target).value)"
       maxlength="500"
       placeholder="Ej: Cra 15 #10-20, Armenia, Quindio"
-    ></textarea>
+    />
     <small class="char-count">{{ direccion.length }}/500</small>
   </div>
 

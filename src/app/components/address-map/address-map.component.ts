@@ -31,6 +31,7 @@ export class AddressMapComponent implements AfterViewInit, OnChanges, OnDestroy 
   @Output() longitudChange = new EventEmitter<number | null>();
 
   @ViewChild('mapContainer') mapContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('direccionInput') direccionInput!: ElementRef<HTMLInputElement>;
 
   loadingMap = false;
   geocoding = false;
@@ -45,7 +46,7 @@ export class AddressMapComponent implements AfterViewInit, OnChanges, OnDestroy 
   constructor(private googleMapsLoader: GoogleMapsLoaderService) {}
 
   ngAfterViewInit(): void {
-    this.inicializarMapa();
+    setTimeout(() => this.inicializarMapa());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -54,7 +55,7 @@ export class AddressMapComponent implements AfterViewInit, OnChanges, OnDestroy 
     }
 
     if ((changes['latitud'] || changes['longitud']) && this.tieneCoordenadas()) {
-      this.posicionarMarcador({ lat: this.latitud!, lng: this.longitud! }, false);
+      queueMicrotask(() => this.posicionarMarcador({ lat: this.latitud!, lng: this.longitud! }, false));
       return;
     }
 
