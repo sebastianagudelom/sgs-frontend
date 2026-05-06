@@ -46,11 +46,15 @@
               </td>
               <td>
                 <div class="acciones">
-                  <select (change)="cambiarEstado(pedido.id, $any($event.target).value)" [value]="pedido.estado">
-                    @for (est of estados; track est) {
-                      <option [value]="est" [selected]="est === pedido.estado">{{ getEstadoLabel(est) }}</option>
-                    }
-                  </select>
+                  @if (esEstadoTerminal(pedido.estado)) {
+                    <span class="estado-terminal">Sin cambios permitidos</span>
+                  } @else {
+                    <select (change)="cambiarEstado(pedido.id, $any($event.target).value)" [value]="pedido.estado">
+                      @for (est of getEstadosPermitidos(pedido.estado); track est) {
+                        <option [value]="est" [selected]="est === pedido.estado">{{ getEstadoLabel(est) }}</option>
+                      }
+                    </select>
+                  }
                   <button class="btn btn-sm btn-outline" (click)="toggleDetalles(pedido.id)">
                     {{ pedidoExpandido === pedido.id ? '▲ Ocultar' : '▼ Detalles' }}
                   </button>

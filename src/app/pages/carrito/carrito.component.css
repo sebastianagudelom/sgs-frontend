@@ -392,3 +392,70 @@ textarea:focus {
   border-style: dashed;
   background: white;
 }
+
+.alert {
+  padding: 0.85rem 1.2rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.alert-error {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+.alert-success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.alert-warning {
+  background: #fff8e1;
+  color: #e65100;
+  border: 1px solid #ffcc80;
+  line-height: 1.5;
+}
+
+.pending-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.btn-link {
+  color: #e65100;
+  font-weight: 600;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+}
+
+.btn-cancel-pending {
+  background: #e65100;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-cancel-pending:hover:not(:disabled) {
+  background: #bf360c;
+}
+
+.btn-cancel-pending:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -29,6 +29,8 @@ export class PerfilComponent implements OnInit {
   direcciones: DireccionResponse[] = [];
   mostrarFormDireccion = false;
   editandoDireccionId: number | null = null;
+  mostrarModalEliminar = false;
+  idDireccionAEliminar: number | null = null;
   dirNombre = '';
   dirDireccion = '';
   dirLatitud: number | null = null;
@@ -144,17 +146,30 @@ export class PerfilComponent implements OnInit {
   }
 
   eliminarDireccion(id: number): void {
-    if (!confirm('¿Estás seguro de eliminar esta dirección?')) return;
+    this.idDireccionAEliminar = id;
+    this.mostrarModalEliminar = true;
+  }
 
-    this.perfilService.eliminarDireccion(id).subscribe({
+  confirmarEliminar(): void {
+    if (this.idDireccionAEliminar === null) return;
+    this.mostrarModalEliminar = false;
+
+    this.perfilService.eliminarDireccion(this.idDireccionAEliminar).subscribe({
       next: () => {
         this.successMessage = 'Dirección eliminada';
+        this.idDireccionAEliminar = null;
         this.cargarPerfil();
       },
       error: () => {
         this.errorMessage = 'Error al eliminar la dirección';
+        this.idDireccionAEliminar = null;
       }
     });
+  }
+
+  cancelarEliminar(): void {
+    this.mostrarModalEliminar = false;
+    this.idDireccionAEliminar = null;
   }
 
   marcarPredeterminada(id: number): void {

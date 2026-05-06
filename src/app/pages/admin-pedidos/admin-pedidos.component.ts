@@ -16,7 +16,10 @@ export class AdminPedidosComponent implements OnInit {
   loading = true;
   errorMessage = '';
   pedidoExpandido: number | null = null;
-  estados = ['PENDIENTE', 'PAGADO', 'CONFIRMADO', 'ENVIADO', 'ENTREGADO', 'CANCELADO', 'RECHAZADO'];
+  private static readonly ORDEN_ESTADO: Record<string, number> = {
+    PENDIENTE: 0, PAGADO: 1, CONFIRMADO: 2, ENVIADO: 3, ENTREGADO: 4
+  };
+  private static readonly ESTADOS_TERMINALES = new Set(['ENTREGADO', 'CANCELADO', 'RECHAZADO']);
 
   constructor(private pedidoService: PedidoService) {}
 
@@ -67,6 +70,18 @@ export class AdminPedidosComponent implements OnInit {
       case 'RECHAZADO': return 'estado-rechazado';
       default: return '';
     }
+  }
+
+  esEstadoTerminal(estado: string): boolean {
+    return AdminPedidosComponent.ESTADOS_TERMINALES.has(estado);
+  }
+
+  getEstadosPermitidos(estadoActual: string): string[] {
+    const ordenActual = AdminPedidosComponent.ORDEN_ESTADO[estadoActual] ?? -1;
+    const avance = Object.entries(AdminPedidosComponent.ORDEN_ESTADO)
+      .filter(([, orden]) => orden > ordenActual)
+      .map(([est]) => est);
+    return [estadoActual, ...avance, 'CANCELADO'];
   }
 
   getEstadoLabel(estado: string): string {

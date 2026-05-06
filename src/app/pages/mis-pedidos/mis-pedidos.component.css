@@ -4,6 +4,20 @@
   padding: 2rem 1.5rem;
 }
 
+.alert {
+  padding: 0.85rem 1.2rem;
+  border-radius: 10px;
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.alert-success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;

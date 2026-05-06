@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { PedidoService } from '../../services/pedido.service';
+import { CarritoService } from '../../services/carrito.service';
 import { PedidoResponse, FacturaResponse } from '../../models/pedido.model';
+
+const PENDING_ORDER_KEY = 'pendingOrderId';
 
 @Component({
   selector: 'app-mis-pedidos',
@@ -15,14 +18,27 @@ export class MisPedidosComponent implements OnInit {
   pedidos: PedidoResponse[] = [];
   loading = true;
   pedidoExpandido: number | null = null;
+  pagoExitoso = false;
 
   facturaActual: FacturaResponse | null = null;
   mostrarFactura = false;
   cargandoFactura = false;
 
-  constructor(private pedidoService: PedidoService) {}
+  constructor(
+    private pedidoService: PedidoService,
+    private carritoService: CarritoService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const status = params['status'] ?? params['collection_status'];
+      if (status === 'approved') {
+        this.carritoService.vaciarCarrito();
+        localStorage.removeItem(PENDING_ORDER_KEY);
+        this.pagoExitoso = true;
+      }
+    });
     this.cargarPedidos();
   }
 

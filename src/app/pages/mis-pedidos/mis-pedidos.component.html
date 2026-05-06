@@ -4,6 +4,12 @@
     <a routerLink="/productos" class="btn btn-outline">Seguir comprando</a>
   </div>
 
+  @if (pagoExitoso) {
+    <div class="alert alert-success">
+      ¡Pago realizado con éxito! Tu pedido está siendo procesado.
+    </div>
+  }
+
   @if (loading) {
     <div class="loading-container">
       <div class="spinner-lg"></div>

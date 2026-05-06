@@ -9,6 +9,20 @@
     }
   </div>
 
+  @if (pedidoPendiente) {
+    <div class="alert alert-warning">
+      <strong>Tienes un pago pendiente</strong> (Pedido #{{ pedidoPendiente.id }}).
+      Si ya completaste el pago, espera un momento y recarga la página.
+      Si no vas a pagar, cancela el pedido para liberar el stock.
+      <div class="pending-actions">
+        <a routerLink="/mis-pedidos" class="btn-link">Ver mis pedidos</a>
+        <button class="btn-cancel-pending" (click)="cancelarPedidoPendiente()" [disabled]="cancelandoPendiente">
+          {{ cancelandoPendiente ? 'Cancelando...' : 'Cancelar pedido pendiente' }}
+        </button>
+      </div>
+    </div>
+  }
+
   @if (errorMessage) {
     <div class="alert alert-error">{{ errorMessage }}</div>
   }
@@ -123,7 +137,7 @@
         <button
           class="btn-checkout"
           (click)="realizarPedido()"
-          [disabled]="loading || direccionEnvio.trim().length < 10"
+          [disabled]="loading || direccionEnvio.trim().length < 10 || !!pedidoPendiente"
         >
           @if (loading) {
             <span class="spinner"></span> Procesando...

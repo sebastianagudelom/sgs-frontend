@@ -32,6 +32,10 @@ export class PedidoService {
     return this.http.patch<PedidoResponse>(`${this.apiUrl}/${id}/estado`, null, { params });
   }
 
+  cancelarPedido(id: number): Observable<PedidoResponse> {
+    return this.http.post<PedidoResponse>(`${this.apiUrl}/${id}/cancelar`, null);
+  }
+
   obtenerFactura(id: number): Observable<FacturaResponse> {
     return this.http.get<FacturaResponse>(`${this.apiUrl}/${id}/factura`);
   }

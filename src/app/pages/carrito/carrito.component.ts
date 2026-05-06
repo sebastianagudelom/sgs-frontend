@@ -4,9 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CarritoService } from '../../services/carrito.service';
 import { PagoService } from '../../services/pago.service';
+import { PedidoService } from '../../services/pedido.service';
 import { PerfilService } from '../../services/perfil.service';
-import { ItemCarrito } from '../../models/pedido.model';
+import { ItemCarrito, PedidoResponse } from '../../models/pedido.model';
 import { DireccionResponse } from '../../models/perfil.model';
+
+const PENDING_ORDER_KEY = 'pendingOrderId';
 
 @Component({
   selector: 'app-carrito',
@@ -25,9 +28,13 @@ export class CarritoComponent implements OnInit {
   direccionSeleccionadaId: number | null = null;
   usarDireccionPersonalizada = false;
 
+  pedidoPendiente: PedidoResponse | null = null;
+  cancelandoPendiente = false;
+
   constructor(
     public carritoService: CarritoService,
     private pagoService: PagoService,
+    private pedidoService: PedidoService,
     private perfilService: PerfilService,
     private router: Router
   ) {}
@@ -44,6 +51,50 @@ export class CarritoComponent implements OnInit {
           this.direccionSeleccionadaId = dirs[0].id;
           this.direccionEnvio = dirs[0].direccion;
         }
+      }
+    });
+
+    this.verificarPedidoPendiente();
+  }
+
+  private verificarPedidoPendiente(): void {
+    const pendingId = localStorage.getItem(PENDING_ORDER_KEY);
+    if (!pendingId) return;
+
+    this.pedidoService.obtenerPorId(+pendingId).subscribe({
+      next: (pedido) => {
+        const estadosCompletados = ['PAGADO', 'CONFIRMADO', 'ENVIADO', 'ENTREGADO'];
+        const estadosCancelados = ['CANCELADO', 'RECHAZADO'];
+
+        if (estadosCompletados.includes(pedido.estado)) {
+          this.carritoService.vaciarCarrito();
+          localStorage.removeItem(PENDING_ORDER_KEY);
+        } else if (estadosCancelados.includes(pedido.estado)) {
+          localStorage.removeItem(PENDING_ORDER_KEY);
+        } else {
+          // Sigue PENDIENTE
+          this.pedidoPendiente = pedido;
+        }
+      },
+      error: () => {
+        localStorage.removeItem(PENDING_ORDER_KEY);
+      }
+    });
+  }
+
+  cancelarPedidoPendiente(): void {
+    if (!this.pedidoPendiente) return;
+    this.cancelandoPendiente = true;
+    this.pedidoService.cancelarPedido(this.pedidoPendiente.id).subscribe({
+      next: () => {
+        this.pedidoPendiente = null;
+        localStorage.removeItem(PENDING_ORDER_KEY);
+        this.cancelandoPendiente = false;
+        this.successMessage = 'Pedido cancelado. Puedes realizar un nuevo pago.';
+      },
+      error: (err) => {
+        this.cancelandoPendiente = false;
+        this.errorMessage = err.error?.mensaje || err.error?.message || 'Error al cancelar el pedido';
       }
     });
   }
@@ -124,8 +175,8 @@ export class CarritoComponent implements OnInit {
       direccionEnvio: this.direccionEnvio
     }).subscribe({
       next: (response) => {
-        this.carritoService.vaciarCarrito();
-        // Redirigir al checkout de Mercado Pago
+        // Guardar el pedidoId pendiente; el carrito se limpia solo al confirmar el pago
+        localStorage.setItem(PENDING_ORDER_KEY, String(response.pedidoId));
         window.location.href = response.initPoint;
       },
       error: (err) => {

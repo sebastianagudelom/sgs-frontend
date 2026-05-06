@@ -158,3 +158,9 @@ tbody tr:hover {
   min-width: 100px;
   text-align: right;
 }
+
+.estado-terminal {
+  font-size: 0.78rem;
+  color: #999;
+  font-style: italic;
+}
